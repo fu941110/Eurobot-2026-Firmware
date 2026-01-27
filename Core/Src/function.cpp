@@ -11,6 +11,7 @@
 double Vx_goal = 0.0;
 double Vy_goal = 0.0;
 double Vz_goal = 0.0;
+int b = 0;
 
 // ROS spinOnce
 //extern TIM_HandleTypeDef htim7;
@@ -24,29 +25,33 @@ double Vz_goal = 0.0;
 //static int stop_countdown = 10;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-//	if (htim->Instance == TIM13) {
-//		// Update car Vnow & intergral location with driving wheel encoder.
-//		omni.UpdateNowCarInfo_Driving();
-//		omni.UpdateCarLocation_Driving();
-//
-//		// Update four wheel's PID value.
-//		omni.Update_PID();
-//
-//		// Output GPIO and PWM
-//		omni.Move();
-//
-//		// Debug from Live Expressions ( Optional )
-//		omni.SetMotorVgoal();
-////		omni.SetGoalCarInfo(Vx_goal,Vy_goal,Vz_goal);]
-//
-//
+	if (htim->Instance == TIM13) {
+		// Update car Vnow & intergral location with driving wheel encoder.
+		omni.UpdateNowCarInfo_Driving();
+		omni.UpdateCarLocation_Driving();
+		b++;
+		// Update four wheel's PID value.
+		omni.Update_PID();
+
+		// Output GPIO and PWM
+		omni.Move();
+
+		// Debug from Live Expressions ( Optional )
+		omni.SetMotorVgoal();
+
+		// there is a problem in setting Vgoal
+		// hardcode for test
+		omni.SetGoalCarInfo(0.02, 0 ,0);
+		// omni.SetGoalCarInfo(Vx_goal, Vy_goal, Vz_goal);
+
+
 //		// ROS pub
 //		if (++ROS_CAR_FREQUENCY_Driving >= ROS_CAR_PUB_FREQUENCY) {
 //			ROS_CAR_FREQUENCY_Driving = 0;
 //			ROS::PubCarVnow_Driving();
 //		}
-//	}
-//	else
+	}
+	else
 		if(htim->Instance == TIM16) {
 		// Update car Vnow & intergral location with dead wheel encoder.
 		omni.UpdateNowCarInfo_Dead();
